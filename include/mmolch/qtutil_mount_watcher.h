@@ -1,5 +1,6 @@
 #pragma once
 
+#include <QLoggingCategory>
 #include <QObject>
 #include <QReadWriteLock>
 #include <QStringList>
@@ -8,6 +9,8 @@
 class QSocketNotifier;
 
 namespace mmolch::qtutil {
+
+Q_DECLARE_LOGGING_CATEGORY(lcMountWatcher)
 
 class MountWatcher : public QObject
 {

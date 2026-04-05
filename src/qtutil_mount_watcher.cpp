@@ -9,12 +9,14 @@
 
 namespace mmolch::qtutil {
 
+Q_LOGGING_CATEGORY(lcMountWatcher, "mmolch.qtutil.mountwatcher")
+
 MountWatcher::MountWatcher(QObject* parent)
     : QObject(parent)
 {
     m_fd = ::open("/proc/self/mountinfo", O_RDONLY);
     if (m_fd == -1) {
-        qFatal("Failed to open /proc/self/mountinfo: %s", strerror(errno));
+        qCCritical(lcMountWatcher) << "Failed to open /proc/self/mountinfo:" << strerror(errno);
     }
 }
 
@@ -116,13 +118,17 @@ void MountWatcher::updateMounts()
     const QStringList current = readMounts();
 
     for (const QString& m : current) {
-        if (!m_mounts.contains(m))
+        if (!m_mounts.contains(m)) {
+            qCDebug(lcMountWatcher) << "Mount added:" << m;
             emit mountAdded(m);
+        }
     }
 
     for (const QString& m : std::as_const(m_mounts)) {
-        if (!current.contains(m))
+        if (!current.contains(m)) {
+            qCDebug(lcMountWatcher) << "Mount removed:" << m;
             emit mountRemoved(m);
+        }
     }
 
     QWriteLocker lock{&m_mountsLock};
