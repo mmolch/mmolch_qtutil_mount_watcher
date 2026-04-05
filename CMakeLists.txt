@@ -12,7 +12,6 @@ set(CMAKE_CXX_STANDARD 17)
 
 find_package(Qt6 REQUIRED COMPONENTS
     Core
-    DBus
 )
 
 qt_standard_project_setup()
@@ -25,7 +24,6 @@ add_library(${PROJECT_NAME} STATIC
 
 target_link_libraries(${PROJECT_NAME} PUBLIC
     Qt6::Core
-    Qt6::DBus
 )
 
 target_include_directories(${PROJECT_NAME} PUBLIC
